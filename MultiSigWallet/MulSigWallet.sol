@@ -115,4 +115,35 @@ contract MulSigWallet {
         emit SubmitTransaction(msg.sender, txIndex, _to, _value, _data);
     }
     
+    function confirmTransaction(uint _txIndex)
+    public
+    onlyOwner
+    notConfirmed(_txIndex)
+    notExecuted(_txIndex)
+    txExists(_txIndex)
+    {
+        Transaction storage transaction = transactions[_txIndex];
+        transaction.numConfirmations += 1;
+        isConfirmed[_txIndex][msg.sender] = true;
+
+        emit ConfirmTransaction(msg.sender, _txIndex);
+    }
+
+    function executeTransaction(uint _txIndex)
+    public
+    onlyOwner
+    txExists(_txIndex)
+    notExecuted(_txIndex)
+    {
+        Transaction storage transaction = transactions[_txIndex];
+        /// @notice first we check if we have the number of confirmations required on this transaction
+        require(transaction.numConfirmations = numConfirmationsRequired, "Not enough confirmations");
+        /// set transactions[_txIndex] to true
+        transaction.executed = true;
+        
+        (bool success, ) = transaction.to.call({value: transaction.value})(transaction.data);
+        require(success, "tx failed");
+
+        emit ExecuteTransaction(msg.sender, _txIndex);
+    }
 }

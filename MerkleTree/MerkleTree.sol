@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity 0.8.13;
+/// @notice Merkle tree allows you to cryptographically
+/// prove that an element is contained in a set without
+/// revealing the entire set
+/// @notice learn more about merkle tree here => https://learn.bybit.com/blockchain/what-is-merkle-tree/
+
+contract MerkleProof {
+    function verify(
+        bytes32[] memory proof,
+        bytes32 root,
+        bytes32 leaf,
+        uint index
+    )
+    public
+    pure
+    returns (bool) {
+        bytes32 hash = leaf;
+
+        for (uint i = 0; i < proof.length; i++) {
+            bytes32 proofElement = proof[i];
+
+            if (index % 2 == 0) {
+                hash = keccak256(abi.encodePacked(hash, proofElement));
+            } else {
+                hash = keccak256(abi.encodePacked(proofElement, hash));
+            }
+
+            index = index / 2;
+        }
+        return hash == root;
+    }
+    
+}
+
