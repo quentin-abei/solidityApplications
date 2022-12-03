@@ -62,7 +62,7 @@ contract MultiSigWallet {
     }
 
     constructor(address[] memory _owners, uint _numConfirmationsRequired) {
-        require(_owners.length > 0, "Only owners");
+        require(_owners.length > 0, "No owners");
         ///  @notice only owners can confirm transactions
         /// so numConfirmationsRequired should be less or equal
         /// to total number of owners
