@@ -37,7 +37,7 @@ contract TestMerkleProof is MerkleProof {
     bytes32[] public hashes;
 
     constructor () {
-        string{4} memory transactions = [
+        string[4] memory transactions = [
             "alice -> bob",
             "bob -> dave",
             "carol -> alice",
